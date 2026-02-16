@@ -1,5 +1,7 @@
 # @purpleraven/server-lvm
 
+[![Coverage](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/lhjnano/lvm-mcp/gh-pages/badge.json&label=Coverage&query=$.message)](https://github.com/lhjnano/lvm-mcp/actions/workflows/ci.yml)
+
 MCP server for managing LVM (Logical Volume Manager) on Linux systems.
 
 ## Installation
