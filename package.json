@@ -1,0 +1,42 @@
+{
+  "name": "@purpleraven/server-lvm",
+  "version": "0.0.1",
+  "description": "MCP server for LVM (Logical Volume Manager) management",
+  "license": "MIT",
+  "mcpName": "io.github.purpleraven/server-lvm",
+  "author": "purpleraven",
+  "homepage": "https://github.com/lhjnano/lvm-mcp",
+  "bugs": "https://github.com/lhjnano/lvm-mcp/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lhjnano/lvm-mcp.git"
+  },
+  "type": "module",
+  "bin": {
+    "mcp-server-lvm": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && shx chmod +x dist/*.js",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "test": "vitest run --coverage",
+    "docker:build": "docker build -t lvm-mcp .",
+    "docker:run": "docker run --privileged -it lvm-mcp"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod-to-json-schema": "^3.23.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@vitest/coverage-v8": "^2.1.8",
+    "shx": "^0.3.4",
+    "typescript": "^5.8.2",
+    "vitest": "^2.1.8"
+  }
+}
