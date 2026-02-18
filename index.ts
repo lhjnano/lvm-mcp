@@ -17,14 +17,14 @@ export function getExecutor() {
   return executor;
 }
 
-// LV 타입 열거형
+// LV type enum
 const LvTypeEnum = z.enum([
   "linear", "striped", "mirror", 
   "raid0", "raid1", "raid4", "raid5", "raid6", "raid10", 
   "thin", "thin-pool", "cache", "cache-pool"
 ]);
 
-// LV 생성 인자 스키마
+// LV create args schema
 const LvCreateArgsSchema = z.object({
   vgName: z.string().describe("Volume Group name"),
   lvName: z.string().describe("Logical Volume name"),
@@ -49,7 +49,7 @@ const LvCreateArgsSchema = z.object({
   allocPolicy: z.enum(["inherit", "contiguous", "cling", "normal", "anywhere", "inherit"]).optional().describe("Allocation policy"),
 });
 
-// LV 확장 인자 스키마
+// LV extend args schema
 const LvExtendArgsSchema = z.object({
   lvPath: z.string().describe("LV path (e.g., /dev/vg0/lv0)"),
   size: z.string().optional().describe("Target size (e.g., 20G)"),
@@ -58,20 +58,21 @@ const LvExtendArgsSchema = z.object({
   resizeFs: z.boolean().optional().describe("Resize filesystem as well").default(false),
 });
 
-// LV 축소 인자 스키마
+// LV reduce args schema
 const LvReduceArgsSchema = z.object({
   lvPath: z.string().describe("LV path (e.g., /dev/vg0/lv0)"),
   size: z.string().describe("Target size (e.g., 5G)"),
   resizeFs: z.boolean().optional().describe("Resize filesystem as well").default(false),
 });
 
-// LV 제거 인자 스키마
+// LV remove args schema
 const LvRemoveArgsSchema = z.object({
   lvPath: z.string().describe("LV path (e.g., /dev/vg0/lv0)"),
   force: z.boolean().optional().describe("Force removal").default(false),
+  confirm: z.boolean().optional().describe("Confirm before deleting").default(false)
 });
 
-// LV 변경 인자 스키마
+// LV change args schema
 const LvChangeArgsSchema = z.object({
   lvPath: z.string().describe("LV path (e.g., /dev/vg0/lv0)"),
   activate: z.boolean().optional().describe("Activate LV"),
@@ -80,7 +81,7 @@ const LvChangeArgsSchema = z.object({
   delTag: z.string().optional().describe("Tag to delete"),
 });
 
-// VG 생성 인자 스키마
+// VG create args schema
 const VgCreateArgsSchema = z.object({
   vgName: z.string().describe("Volume Group name"),
   physicalVolumes: z.array(z.string()).describe("PV list"),
@@ -90,19 +91,20 @@ const VgCreateArgsSchema = z.object({
   force: z.boolean().optional().describe("Force creation").default(false),
 });
 
-// VG 확장 인자 스키마
+// VG extend args schema
 const VgExtendArgsSchema = z.object({
   vgName: z.string().describe("Volume Group name"),
   physicalVolumes: z.array(z.string()).describe("PV list to add"),
 });
 
-// VG 제거 인자 스키마
+// VG remove args schema
 const VgRemoveArgsSchema = z.object({
   vgName: z.string().describe("Volume Group name"),
   force: z.boolean().optional().describe("Force removal").default(false),
+  confirm: z.boolean().optional().describe("Confirm before deleting").default(false)
 });
 
-// PV 생성 인자 스키마
+// PV create args schema
 const PvCreateArgsSchema = z.object({
   device: z.string().describe("Device path (e.g., /dev/sdb1)"),
   dataAlignment: z.number().optional().describe("Data alignment in KB"),
@@ -111,13 +113,14 @@ const PvCreateArgsSchema = z.object({
   force: z.boolean().optional().describe("Force creation").default(false),
 });
 
-// PV 제거 인자 스키마
+// PV remove args schema
 const PvRemoveArgsSchema = z.object({
   pvName: z.string().describe("PV name"),
   force: z.boolean().optional().describe("Force removal").default(false),
+  confirm: z.boolean().optional().describe("Confirm before deleting").default(false)
 });
 
-// 캐시 생성 인자 스키마
+// Cache create args schema
 const CacheCreateArgsSchema = z.object({
   origin: z.string().describe("Origin LV path"),
   fastPvs: z.array(z.string()).describe("Fast PVs (SSD/NVMe)"),
@@ -126,7 +129,7 @@ const CacheCreateArgsSchema = z.object({
   cacheType: z.enum(["cache", "writecache"]).optional().describe("Cache type"),
 });
 
-// 캐시 분리 인자 스키마
+// Split cache args schema
 const SplitCacheArgsSchema = z.object({
   lvPath: z.string().describe("LV path"),
   force: z.boolean().optional().describe("Force split (skip 5+ hour flush)").default(false),
@@ -138,14 +141,14 @@ const RaidScrubArgsSchema = z.object({
   syncaction: z.enum(["check", "repair"]).describe("Sync action"),
 });
 
-// RAID 복구 속도 설정 인자 스키마
+// Set RAID recovery rate args schema
 const SetRaidRecoveryRateArgsSchema = z.object({
   lvPath: z.string().describe("LV path"),
   minRecoveryRate: z.string().optional().describe("Minimum recovery rate (e.g., 128KiB/s)"),
   maxRecoveryRate: z.string().optional().describe("Maximum recovery rate (e.g., 2MiB/s)"),
 });
 
-// 스냅샷 생성 인자 스키마
+// Snapshot create args schema
 const SnapshotCreateArgsSchema = z.object({
   snapshotName: z.string().describe("Snapshot name"),
   sourceLvPath: z.string().describe("Source LV path"),
@@ -154,18 +157,19 @@ const SnapshotCreateArgsSchema = z.object({
   thin: z.boolean().optional().describe("Thin snapshot").default(false),
 });
 
-// 스냅샷 목록 인자 스키마
+// List snapshots args schema
 const ListSnapshotsArgsSchema = z.object({
   vgName: z.string().optional().describe("VG name"),
 });
 
-// 스냅샷 제거 인자 스키마
+// Remove snapshot args schema
 const RemoveSnapshotArgsSchema = z.object({
   snapshotPath: z.string().describe("Snapshot LV path"),
   force: z.boolean().optional().describe("Force removal").default(false),
+  confirm: z.boolean().optional().describe("Confirm before deleting").default(false)
 });
 
-// Thin pool 생성 인자 스키마
+// Thin pool create args schema
 const ThinPoolCreateArgsSchema = z.object({
   poolName: z.string().describe("Pool name"),
   vgName: z.string().describe("VG name"),
@@ -175,14 +179,14 @@ const ThinPoolCreateArgsSchema = z.object({
   zero: z.boolean().optional().describe("Zero initial blocks").default(false),
 });
 
-// 설정 읽기 인자 스키마
+// Config read args schema
 const ConfReadArgsSchema = z.object({
   path: z.string().optional().describe("Config file path (default: /etc/lvm/lvm.conf)"),
   section: z.string().optional().describe("Section name"),
   key: z.string().optional().describe("Key name"),
 });
 
-// 설정 쓰기 인자 스키마
+// Config write args schema
 const ConfWriteArgsSchema = z.object({
   section: z.string().describe("Section name"),
   key: z.string().describe("Key name"),
@@ -192,7 +196,7 @@ const ConfWriteArgsSchema = z.object({
   backup: z.boolean().optional().describe("Create backup").default(true),
 });
 
-// LVM 명령 실행 헬퍼 함수
+// LVM command execution helper function
 async function executeLVMCommand(command: string, args: string[]): Promise<{
   success: boolean;
   stdout: string;
@@ -203,7 +207,7 @@ async function executeLVMCommand(command: string, args: string[]): Promise<{
   return await executor.execute(command, args);
 }
 
-// LV 생성
+// Create LV
 export async function lvcreate(args: z.infer<typeof LvCreateArgsSchema>) {
   const cmdArgs = ["-L", args.size, "-n", args.lvName];
   
@@ -257,7 +261,7 @@ export async function lvcreate(args: z.infer<typeof LvCreateArgsSchema>) {
   return await executeLVMCommand("lvcreate", cmdArgs);
 }
 
-// LV 확장
+// Extend LV
 export async function lvextend(args: z.infer<typeof LvExtendArgsSchema>) {
   const cmdArgs: string[] = [];
   
@@ -276,7 +280,7 @@ export async function lvextend(args: z.infer<typeof LvExtendArgsSchema>) {
   return await executeLVMCommand("lvextend", cmdArgs);
 }
 
-// LV 축소
+// Reduce LV
 export async function lvreduce(args: z.infer<typeof LvReduceArgsSchema>) {
   const cmdArgs: string[] = [];
   
@@ -287,15 +291,23 @@ export async function lvreduce(args: z.infer<typeof LvReduceArgsSchema>) {
   return await executeLVMCommand("lvreduce", cmdArgs);
 }
 
-// LV 제거
+// Remove LV
 export async function lvremove(args: z.infer<typeof LvRemoveArgsSchema>) {
+  if (!args.confirm) {
+    return {
+      status: "confirm",
+      message: `Are you sure you want to remove '${args.lvPath}'?`,
+      hint: "Call again with confirm=true"
+    };
+  }
+
   const cmdArgs = args.force ? ["-f"] : [];
   cmdArgs.push(args.lvPath);
   
   return await executeLVMCommand("lvremove", cmdArgs);
 }
 
-// LV 변경
+// Change LV
 export async function lvchange(args: z.infer<typeof LvChangeArgsSchema>) {
   const cmdArgs: string[] = [];
   
@@ -320,7 +332,7 @@ export async function lvchange(args: z.infer<typeof LvChangeArgsSchema>) {
   return await executeLVMCommand("lvchange", cmdArgs);
 }
 
-// LV 정보 표시
+// Display LV info
 export async function lvdisplay(lvPath?: string) {
   const cmdArgs = ["-c"];
   if (lvPath) cmdArgs.push(lvPath);
@@ -328,7 +340,7 @@ export async function lvdisplay(lvPath?: string) {
   return await executeLVMCommand("lvdisplay", cmdArgs);
 }
 
-// 모든 LV 목록
+// List all LVs
 export async function lvs(options?: string) {
   const cmdArgs: string[] = [];
   if (options) cmdArgs.push(...options.split(" "));
@@ -336,7 +348,7 @@ export async function lvs(options?: string) {
   return await executeLVMCommand("lvs", cmdArgs);
 }
 
-// VG 생성
+// Create VG
 export async function vgcreate(args: z.infer<typeof VgCreateArgsSchema>) {
   const cmdArgs: string[] = [];
   
@@ -350,21 +362,29 @@ export async function vgcreate(args: z.infer<typeof VgCreateArgsSchema>) {
   return await executeLVMCommand("vgcreate", cmdArgs);
 }
 
-// VG 확장
+// Extend VG
 export async function vgextend(args: z.infer<typeof VgExtendArgsSchema>) {
   const cmdArgs = [args.vgName, ...args.physicalVolumes];
   
   return await executeLVMCommand("vgextend", cmdArgs);
 }
 
-// VG 제거
+// Remove VG
 export async function vgremove(args: z.infer<typeof VgRemoveArgsSchema>) {
+  if (!args.confirm) {
+    return {
+      status: "confirm",
+      message: `Are you sure you want to remove VG '${args.vgName}'?`,
+      hint: "Call again with confirm=true"
+    };
+  }
+
   const cmdArgs = args.force ? ["-f", args.vgName] : [args.vgName];
   
   return await executeLVMCommand("vgremove", cmdArgs);
 }
 
-// VG 정보 표시
+// Display VG info
 export async function vgdisplay(vgName?: string) {
   const cmdArgs = ["-c"];
   if (vgName) cmdArgs.push(vgName);
@@ -372,7 +392,7 @@ export async function vgdisplay(vgName?: string) {
   return await executeLVMCommand("vgdisplay", cmdArgs);
 }
 
-// 모든 VG 목록
+// List all VGs
 export async function vgs(options?: string) {
   const cmdArgs: string[] = [];
   if (options) cmdArgs.push(...options.split(" "));
@@ -380,7 +400,7 @@ export async function vgs(options?: string) {
   return await executeLVMCommand("vgs", cmdArgs);
 }
 
-// PV 생성
+// Create PV
 export async function pvcreate(args: z.infer<typeof PvCreateArgsSchema>) {
   const cmdArgs: string[] = [];
   
@@ -394,14 +414,22 @@ export async function pvcreate(args: z.infer<typeof PvCreateArgsSchema>) {
   return await executeLVMCommand("pvcreate", cmdArgs);
 }
 
-// PV 제거
+// Remove PV
 export async function pvremove(args: z.infer<typeof PvRemoveArgsSchema>) {
+  if (!args.confirm) {
+    return {
+      status: "confirm",
+      message: `Are you sure you want to remove PV '${args.pvName}'?`,
+      hint: "Call again with confirm=true"
+    };
+  }
+
   const cmdArgs = args.force ? ["-f", args.pvName] : [args.pvName];
   
   return await executeLVMCommand("pvremove", cmdArgs);
 }
 
-// PV 정보 표시
+// Display PV info
 export async function pvdisplay(pvName?: string) {
   const cmdArgs = ["-c"];
   if (pvName) cmdArgs.push(pvName);
@@ -409,7 +437,7 @@ export async function pvdisplay(pvName?: string) {
   return await executeLVMCommand("pvdisplay", cmdArgs);
 }
 
-// 모든 PV 목록
+// List all PVs
 export async function pvs(options?: string) {
   const cmdArgs: string[] = [];
   if (options) cmdArgs.push(...options.split(" "));
@@ -417,7 +445,7 @@ export async function pvs(options?: string) {
   return await executeLVMCommand("pvs", cmdArgs);
 }
 
-// 캐시 생성
+// Create cache
 export async function cache_create(args: z.infer<typeof CacheCreateArgsSchema>) {
   const cacheType = args.cacheType || "cache";
   const cmdArgs: string[] = [];
@@ -442,7 +470,7 @@ export async function cache_create(args: z.infer<typeof CacheCreateArgsSchema>) 
   return await executeLVMCommand("lvconvert", cmdArgs);
 }
 
-// 캐시 분리
+// Split cache
 export async function splitcache(args: z.infer<typeof SplitCacheArgsSchema>) {
   const cmdArgs = ["--splitcache"];
   if (args.force) cmdArgs.push("--yes");
@@ -458,7 +486,7 @@ export async function raidscrub(args: z.infer<typeof RaidScrubArgsSchema>) {
   return await executeLVMCommand("lvchange", cmdArgs);
 }
 
-// RAID 복구 속도 설정
+// Set RAID recovery rate
 export async function setraidrecoveryrate(args: z.infer<typeof SetRaidRecoveryRateArgsSchema>) {
   const cmdArgs: string[] = [];
   
@@ -470,7 +498,7 @@ export async function setraidrecoveryrate(args: z.infer<typeof SetRaidRecoveryRa
   return await executeLVMCommand("lvchange", cmdArgs);
 }
 
-// 스냅샷 생성
+// Create snapshot
 export async function snapshot_create(args: z.infer<typeof SnapshotCreateArgsSchema>) {
   const cmdArgs = ["-s", "-n", args.snapshotName];
   
@@ -487,7 +515,7 @@ export async function snapshot_create(args: z.infer<typeof SnapshotCreateArgsSch
   return await executeLVMCommand("lvcreate", cmdArgs);
 }
 
-// 스냅샷 목록
+// List snapshots
 export async function listsnapshots(args: z.infer<typeof ListSnapshotsArgsSchema>) {
   const cmdArgs = ["-o", "lv_name,vg_name,origin,data_percent,metadata_percent"];
   
@@ -500,14 +528,22 @@ export async function listsnapshots(args: z.infer<typeof ListSnapshotsArgsSchema
   return await executeLVMCommand("lvs", cmdArgs);
 }
 
-// 스냅샷 제거
+// Remove snapshot
 export async function removesnapshot(args: z.infer<typeof RemoveSnapshotArgsSchema>) {
+  if (!args.confirm) {
+    return {
+      status: "confirm",
+      message: `Are you sure you want to remove snapshot '${args.snapshotPath}'?`,
+      hint: "Call again with confirm=true"
+    };
+  }
+
   const cmdArgs = args.force ? ["-f", args.snapshotPath] : [args.snapshotPath];
   
   return await executeLVMCommand("lvremove", cmdArgs);
 }
 
-// Thin pool 생성
+// Create thin pool
 export async function thinpool_create(args: z.infer<typeof ThinPoolCreateArgsSchema>) {
   const cmdArgs = ["-T", "-L", args.size];
   
@@ -520,7 +556,7 @@ export async function thinpool_create(args: z.infer<typeof ThinPoolCreateArgsSch
   return await executeLVMCommand("lvcreate", cmdArgs);
 }
 
-// 설정 읽기
+// Read config
 export async function conf_read(args: z.infer<typeof ConfReadArgsSchema>) {
   const path = args.path || "/etc/lvm/lvm.conf";
   const cmdArgs = ["--file", path];
@@ -532,7 +568,7 @@ export async function conf_read(args: z.infer<typeof ConfReadArgsSchema>) {
   return await executeLVMCommand("lvmconfig", cmdArgs);
 }
 
-// 설정 쓰기
+// Write config
 export async function conf_write(args: z.infer<typeof ConfWriteArgsSchema>) {
   const path = args.path || "/etc/lvm/lvm.conf";
   
@@ -554,7 +590,7 @@ export async function conf_write(args: z.infer<typeof ConfWriteArgsSchema>) {
   return result as any;
 }
 
-// MCP 서버 생성
+// Create MCP server
 const server = new Server(
   {
     name: "lvm-mcp-server",
@@ -567,7 +603,7 @@ const server = new Server(
   }
 );
 
-// 도구 목록 핸들러
+// Tool list handler
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
@@ -717,7 +753,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
-// 도구 호출 핸들러
+// Tool call handler
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
@@ -837,7 +873,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 });
 
-// 서버 시작
+// Start server
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
